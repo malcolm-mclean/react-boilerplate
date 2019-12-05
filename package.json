@@ -1,0 +1,40 @@
+{
+	"name": "photos-project",
+	"version": "0.0.0",
+	"main": "src/index.ts",
+	"repository": "https://github.com/malcolm-mclean/photos-project.git",
+	"author": "Malcolm McLean",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "webpack --config webpack.config.js",
+		"start": "webpack-dev-server"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.7.4",
+		"@babel/preset-react": "^7.7.4",
+		"@babel/preset-typescript": "^7.7.4",
+		"@testing-library/react": "^9.3.2",
+		"@types/react": "^16.9.14",
+		"@types/react-dom": "^16.9.4",
+		"babel-loader": "^8.0.6",
+		"babel-plugin-jsx-remove-data-test-id": "^2.1.3",
+		"file-loader": "^5.0.2",
+		"html-webpack-plugin": "^3.2.0",
+		"jest": "^24.9.0",
+		"mini-css-extract-plugin": "^0.8.0",
+		"postcss-loader": "^3.0.0",
+		"prettier": "^1.19.1",
+		"sass-loader": "^8.0.0",
+		"style-loader": "^1.0.1",
+		"terser-webpack-plugin": "^2.2.1",
+		"typescript": "^3.7.2",
+		"webpack": "^4.41.2",
+		"webpack-cli": "^3.3.10",
+		"webpack-dev-server": "^3.9.0"
+	},
+	"dependencies": {
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0"
+	}
+}
