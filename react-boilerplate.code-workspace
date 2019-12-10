@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.tabSize": 4,
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": true,
+		"files.insertFinalNewline": true,
+		"prettier.tabWidth": 4,
+		"eslint.validate": [
+			{
+				"language": "typescript"
+			},
+			{
+				"language": "typescriptreact"
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"editorconfig.editorconfig",
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint",
+			"wix.vscode-import-cost"
+		]
+	}
+}
