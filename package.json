@@ -1,8 +1,8 @@
 {
-	"name": "photos-project",
+	"name": "react-boilerplate",
 	"version": "0.0.0",
 	"main": "src/index.ts",
-	"repository": "https://github.com/malcolm-mclean/photos-project.git",
+	"repository": "https://github.com/malcolm-mclean/react-boilerplate.git",
 	"author": "Malcolm McLean",
 	"license": "MIT",
 	"private": true,
