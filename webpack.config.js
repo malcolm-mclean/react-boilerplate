@@ -2,8 +2,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const terserPlugin = require('terser-webpack-plugin');
 
 const SRC_DIR = path.join(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
@@ -44,7 +44,7 @@ module.exports = {
 				test: /\.scss$/,
 				use: [
 					{ loader: 'style-loader' },
-					{ loader: MiniCssExtractPlugin.loader },
+					{ loader: miniCssExtractPlugin.loader },
 					{ loader: 'css-loader' },
 					{ loader: 'postcss-loader' },
 					{ loader: 'sass-loader' }
@@ -87,7 +87,7 @@ module.exports = {
 				}
 			}
 		},
-		minimizer: [new TerserPlugin()]
+		minimizer: [new terserPlugin()]
 	},
 	devServer: {
 		contentBase: DIST_DIR,
@@ -105,7 +105,7 @@ module.exports = {
 			inject: true,
 			template: 'src/index.html'
 		}),
-		new MiniCssExtractPlugin({
+		new miniCssExtractPlugin({
 			filename: 'styles.[hash].css'
 		}),
 		new webpack.HotModuleReplacementPlugin()
