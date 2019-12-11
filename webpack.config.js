@@ -11,27 +11,21 @@ const PUBLIC_PATH = '/';
 
 module.exports = {
 	entry: {
-		main: SRC_DIR + '/index.tsx',
+		main: SRC_DIR + '/index.tsx'
 	},
 	output: {
 		path: DIST_DIR,
 		filename: 'static/js/[name].[hash].js',
 		chunkFilename: 'static/js/[name].[hash].js',
-		publicPath: '/'
+		publicPath: PUBLIC_PATH
 	},
 	resolve: {
-		extensions: [
-			'.ts',
-			'.tsx',
-			'.js',
-			'.json',
-			'.svg'
-		]
+		extensions: ['.ts', '.tsx', '.js', '.json', '.svg']
 	},
 	module: {
 		rules: [
 			{
-				test: /\.ts(x?)$/,
+				test: /\.ts(x?)$/i,
 				include: SRC_DIR,
 				exclude: /node_modules/,
 				use: [
@@ -51,7 +45,7 @@ module.exports = {
 				]
 			},
 			{
-				test: /\.(woff(2)?|ttf|eot|otf)(\?v=\d+\.\d+\.\d+)?$/,
+				test: /\.(woff(2?)|ttf|eot|otf)(\?v=\d+\.\d+\.\d+)?$/i,
 				use: [
 					{
 						loader: 'file-loader',
@@ -68,7 +62,7 @@ module.exports = {
 					{
 						loader: 'file-loader',
 						options: {
-							name: 'static/img/[name].[ext]',
+							name: 'static/img/[name].[hash].[ext]',
 							publicPath: PUBLIC_PATH
 						}
 					}
@@ -106,7 +100,7 @@ module.exports = {
 			template: 'src/index.html'
 		}),
 		new miniCssExtractPlugin({
-			filename: 'styles.[hash].css'
+			filename: 'static/css/[name].[hash].css'
 		}),
 		new webpack.HotModuleReplacementPlugin()
 	]
