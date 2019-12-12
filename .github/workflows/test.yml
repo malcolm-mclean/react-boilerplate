@@ -17,12 +17,16 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn
-    - name: yarn install, build, and test
-    - run: |
-      yarn
-      yarn build
-      yarn test
-      yarn clean
-      env:
-        CI: true
+    - name: Install Yarn
+      run: npm install -g yarn
+    - name: Install Packages
+      run:
+        yarn
+    - name: Build and Test
+      run: |
+        yarn build
+        yarn test
+    - name: Clean Up
+      run: |
+        yarn clean
+        rm -rf node_modules/
