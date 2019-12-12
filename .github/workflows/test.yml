@@ -18,16 +18,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Yarn
-      run: |
+    - run: |
         npm install -g yarn
     - name: Install Packages
-      run: |
-        yarn
+    - run: |
+        yarn install
     - name: Build and Test
-      run: |
+    - run: |
         yarn build
         yarn test
     - name: Clean Up
-      run: |
+    - run: |
         yarn clean
         rm -rf node_modules/
