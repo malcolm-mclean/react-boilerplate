@@ -4,12 +4,13 @@ Clone, then:
 
 ```sh
 yarn install
+
+# Development server
 yarn start
-```
 
-Test with:
+# Build
+yarn build
 
-```sh
+# Test
 yarn test
 ```
-
