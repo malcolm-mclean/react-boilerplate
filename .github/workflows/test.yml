@@ -1,0 +1,30 @@
+on: [push, pull_request]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Yarn
+      run: |
+        npm install -g yarn
+    - name: Install Packages
+      run: |
+        yarn install
+    - name: Build and Test
+      run: |
+        yarn build
+        yarn test
+    - name: Clean Up
+      run: |
+        yarn clean
+        rm -rf node_modules
