@@ -914,6 +914,17 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@malcolm-mclean/eslint-config@malcolm-mclean/eslint-config#1.0.0":
+  version "1.0.0"
+  resolved "https://codeload.github.com/malcolm-mclean/eslint-config/tar.gz/ed276062c9dce884358dccac391dd16cace88fb5"
+  dependencies:
+    "@typescript-eslint/eslint-plugin" "^2.11.0"
+    "@typescript-eslint/parser" "^2.11.0"
+    eslint "^6.7.2"
+    eslint-config-prettier "^6.7.0"
+    eslint-plugin-jest "^23.1.1"
+    eslint-plugin-react "^7.17.0"
+
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
@@ -3030,17 +3041,6 @@ escodegen@^1.9.1:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
-
-eslint-config-linting@malcolm-mclean/eslint-config-linting#1.0.0:
-  version "1.0.0"
-  resolved "https://codeload.github.com/malcolm-mclean/eslint-config-linting/tar.gz/ed276062c9dce884358dccac391dd16cace88fb5"
-  dependencies:
-    "@typescript-eslint/eslint-plugin" "^2.11.0"
-    "@typescript-eslint/parser" "^2.11.0"
-    eslint "^6.7.2"
-    eslint-config-prettier "^6.7.0"
-    eslint-plugin-jest "^23.1.1"
-    eslint-plugin-react "^7.17.0"
 
 eslint-config-prettier@^6.7.0:
   version "6.7.0"

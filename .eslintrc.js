@@ -1,3 +1,3 @@
 module.exports = {
-	extends: 'linting'
+	extends: '@malcolm-mclean'
 };
