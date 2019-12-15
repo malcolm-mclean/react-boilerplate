@@ -10,6 +10,7 @@ module.exports = {
 		'@babel/preset-react'
 	],
 	plugins: [
+		'@babel/plugin-syntax-dynamic-import',
 		[
 			'babel-plugin-jsx-remove-data-test-id',
 			{
