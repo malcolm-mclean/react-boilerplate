@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"semi": true,
 	"singleQuote": true,
 	"tabWidth": 4,
@@ -6,4 +6,4 @@
 	"arrowParens": "avoid",
 	"printWidth": 80,
 	"jsxSingleQuote": false
-}
+};
