@@ -90,6 +90,7 @@ module.exports = {
 		progress: true,
 		port: 8080,
 		open: true,
+		historyApiFallback: true,
 		watchOptions: {
 			ignored: /node_modules/
 		}
