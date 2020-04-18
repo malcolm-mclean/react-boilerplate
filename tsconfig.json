@@ -10,12 +10,6 @@
 		"sourceMap": true,
 		"target": "ES6"
 	},
-	"include": [
-		"src/**/*"
-	],
-	"exclude": [
-		"node_modules",
-		"**/*.test.*",
-		"dist"
-	]
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "**/*.test.*", "dist"]
 }
