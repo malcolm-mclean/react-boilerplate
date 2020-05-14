@@ -7,13 +7,22 @@ const sizeToKilobyteString = (size: number) => {
 	return `${kilobytes} KB`;
 };
 
+const cleanBundleLabel = (label: string) => {
+	const nameStartIndex = label.lastIndexOf('/');
+	const nameEndIndex = label.indexOf('.');
+
+	return label.slice(nameStartIndex, nameEndIndex);
+};
+
 const createMarkdownTable = () => {
 	report.map(bundle => {
+		const bundleName = cleanBundleLabel(bundle.label);
 		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
 		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
 
-		message(`Gzipped: ${gzipSize}`);
-		message(`Minified: ${parsedSize}`);
+		message(
+			`Bundle: ${bundleName} | Gzipped: ${gzipSize} | Parsed: ${parsedSize}`
+		);
 	});
 };
 
