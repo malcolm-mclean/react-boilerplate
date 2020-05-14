@@ -33,6 +33,10 @@ jobs:
       run: |
         yarn install
 
+    - name: Generate bundle report
+      run: |
+        yarn analyze:ci
+
     - name: Danger
       run: |
         yarn danger ci

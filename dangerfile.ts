@@ -1,4 +1,20 @@
-import { message, danger } from 'danger';
+import { message } from 'danger';
+import report from './report.json';
 
-const modifiedMD = danger.git.modified_files.join('- ');
-message('Changed Files in this PR: \n - ' + modifiedMD);
+const sizeToKilobyteString = (size: number) => {
+	const kilobytes = size / 1000;
+
+	return `${kilobytes} KB`;
+};
+
+const createMarkdownTable = () => {
+	report.map(bundle => {
+		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
+		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
+
+		message(`Gzipped: ${gzipSize}`);
+		message(`Minified: ${parsedSize}`);
+	});
+};
+
+createMarkdownTable();

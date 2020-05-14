@@ -4,15 +4,16 @@ const baseConfig = require('./webpack.base.config');
 const terserPlugin = require('terser-webpack-plugin');
 
 const DIST_DIR = path.join(__dirname, 'dist');
+const PUBLIC_PATH = '/';
 
 module.exports = merge(baseConfig, {
 	output: {
 		path: DIST_DIR,
 		filename: 'static/js/[name].[hash].js',
 		chunkFilename: 'static/js/[name].[hash].js',
-		publicPath: '/',
+		publicPath: PUBLIC_PATH,
 	},
-	mode: 'none',
+	mode: 'production',
 	devtool: 'hidden-source-map',
 	optimization: {
 		splitChunks: {
