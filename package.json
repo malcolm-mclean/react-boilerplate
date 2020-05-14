@@ -33,6 +33,7 @@
 		"babel-plugin-jsx-remove-data-test-id": "^2.1.3",
 		"cross-env": "^7.0.2",
 		"css-loader": "^3.5.2",
+		"danger": "^10.2.0",
 		"file-loader": "^6.0.0",
 		"html-webpack-plugin": "^4.2.0",
 		"jest": "^25.3.0",
