@@ -1,4 +1,4 @@
-import { message } from 'danger';
+import { markdown } from 'danger';
 import report from './report.json';
 
 const sizeToKilobyteString = (size: number) => {
@@ -8,22 +8,33 @@ const sizeToKilobyteString = (size: number) => {
 };
 
 const cleanBundleLabel = (label: string) => {
-	const nameStartIndex = label.lastIndexOf('/');
+	const nameStartIndex = label.lastIndexOf('/') + 1;
 	const nameEndIndex = label.indexOf('.');
 
 	return label.slice(nameStartIndex, nameEndIndex);
 };
 
-const createMarkdownTable = () => {
+const createRowsMarkdown = () => {
+	let rowsMarkdown = '';
+
 	report.map(bundle => {
 		const bundleName = cleanBundleLabel(bundle.label);
 		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
 		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
 
-		message(
-			`Bundle: ${bundleName} | Gzipped: ${gzipSize} | Parsed: ${parsedSize}`
-		);
+		rowsMarkdown += `${bundleName} | ${gzipSize} | ${parsedSize}\n`;
 	});
+
+	return rowsMarkdown.trim();
 };
 
-createMarkdownTable();
+const createTableMarkdown = () => {
+	const headerMarkdown =
+		'**Bundle** | **Gzip Size** | **Parsed Size**\n--- | --- | ---\n';
+
+	const rows = createRowsMarkdown();
+
+	markdown(`${headerMarkdown}${rows}`);
+};
+
+createTableMarkdown();
