@@ -31,7 +31,7 @@ jobs:
       run: |
         yarn analyze:ci
 
-    - name: Preserve base-report
+    - name: Preserve report for base branch
       run: |
         mv report.json ../base-report.json
 
@@ -46,7 +46,7 @@ jobs:
       run: |
         yarn analyze:ci
 
-    - name: Recover base report
+    - name: Recover report from base branch
       run: |
         mv ../base-report.json base-report.json
 

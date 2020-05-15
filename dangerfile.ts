@@ -61,5 +61,7 @@ const createBaseTableMarkdown = () => {
 	markdown(`${headerMarkdown}${rows}`);
 };
 
+markdown('### Bundles in base branch');
 createBaseTableMarkdown();
+markdown('### Bundles in compare branch');
 createTableMarkdown();
