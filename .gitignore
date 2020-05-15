@@ -3,4 +3,5 @@ dist/
 yarn-error.log
 report.html
 report.json
+base-report.json
 stats.json
