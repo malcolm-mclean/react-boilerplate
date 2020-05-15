@@ -1,0 +1,48 @@
+name: Report Bundle Size
+on: pull_request
+
+jobs:
+  report-bundle-size:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Checkout base branch
+      uses: actions/checkout@v2
+      with:
+        ref: master
+
+    - name: Install packages to base branch
+      run: |
+        yarn install --frozen-lockfile
+
+    - name: Generate base bundle report
+      run: |
+        yarn analyze:ci
+
+    - name: Rename report to avoid overwriting
+      run: |
+        mv report.json base-report.json
+
+    - name: Checkout compare branch
+      uses: actions/checkout@v2
+
+    - name: Install packages to compare branch
+      run: |
+        yarn install --frozen-lockfile
+
+    - name: Generate compare bundle report
+      run: |
+        yarn analyze:ci
+
+    - name: Create PR comment
+      run: |
+        yarn danger ci
