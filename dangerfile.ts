@@ -1,5 +1,6 @@
 import { markdown } from 'danger';
 import report from './report.json';
+import baseReport from './base-report.json';
 
 const sizeToKilobyteString = (size: number) => {
 	const kilobytes = size / 1000;
@@ -37,4 +38,28 @@ const createTableMarkdown = () => {
 	markdown(`${headerMarkdown}${rows}`);
 };
 
+const createBaseRowsMarkdown = () => {
+	let rowsMarkdown = '';
+
+	baseReport.map(bundle => {
+		const bundleName = cleanBundleLabel(bundle.label);
+		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
+		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
+
+		rowsMarkdown += `${bundleName} | ${gzipSize} | ${parsedSize}\n`;
+	});
+
+	return rowsMarkdown.trim();
+};
+
+const createBaseTableMarkdown = () => {
+	const headerMarkdown =
+		'**Bundle** | **Gzip Size** | **Parsed Size**\n--- | --- | ---\n';
+
+	const rows = createBaseRowsMarkdown();
+
+	markdown(`${headerMarkdown}${rows}`);
+};
+
+createBaseTableMarkdown();
 createTableMarkdown();

@@ -7,8 +7,8 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"analyze": "yarn run build:stats && webpack-bundle-analyzer stats.json --mode static dist/",
-		"analyze:ci": "yarn run build:stats && webpack-bundle-analyzer stats.json --mode json dist/",
+		"analyze": "yarn run build:stats && webpack-bundle-analyzer stats.json dist/ --mode static",
+		"analyze:ci": "yarn run build:stats && webpack-bundle-analyzer stats.json dist/ --mode json",
 		"build": "yarn run clean && yarn run lint && webpack --config webpack.prod.config.js",
 		"build:stats": "yarn run clean && webpack --config webpack.prod.config.js --json > stats.json",
 		"clean": "rimraf dist/",
