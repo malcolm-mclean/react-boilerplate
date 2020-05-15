@@ -10,12 +10,6 @@ jobs:
       matrix:
         node-version: [10.x]
 
-    env:
-      BASE_DIR_NAME: base
-      COMPARE_DIR_NAME: compare
-      BASE_DIR: ${{ github.workspace }}/base
-      COMPARE_DIR: ${{ github.workspace }}/compare
-
     steps:
     - uses: actions/setup-node@v1
       with:
@@ -25,36 +19,27 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: master
-        path: $BASE_DIR_NAME
-    
-    - name: Checkout compare branch
-      uses: actions/checkout@v2
-      with:
-        path: $COMPARE_DIR_NAME
 
     - name: Install packages to base branch
-      working-directory: $BASE_DIR
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate base bundle report
-      working-directory: $BASE_DIR
       run: |
         yarn analyze:ci
 
-    - name: Move base report to compare
-      working-directory: $BASE_DIR
+    - name: Rename report to avoid overwriting
       run: |
-        cp report.json $COMPARE_DIR/base-report.json
+        mv report.json base-report.json
+
+    - name: Checkout compare branch
+      uses: actions/checkout@v2
 
     - name: Install packages to compare branch
-      working-directory: $COMPARE_DIR
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate compare bundle report
-      working-directory: $COMPARE_DIR
       run: |
         yarn analyze:ci
 
