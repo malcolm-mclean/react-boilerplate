@@ -10,6 +10,9 @@ jobs:
       matrix:
         node-version: [10.x]
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
     - uses: actions/setup-node@v1
       with:
@@ -28,9 +31,9 @@ jobs:
       run: |
         yarn analyze:ci
 
-    - name: Rename report to avoid overwriting
+    - name: Preserve base-report
       run: |
-        mv report.json base-report.json
+        mv report.json ../base-report.json
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
@@ -42,6 +45,10 @@ jobs:
     - name: Generate compare bundle report
       run: |
         yarn analyze:ci
+
+    - name: Recover base report
+      run: |
+        mv ../base-report.json base-report.json
 
     - name: Create PR comment
       run: |
