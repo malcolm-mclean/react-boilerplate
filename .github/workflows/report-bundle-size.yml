@@ -27,7 +27,7 @@ jobs:
       run: |
         yarn install --frozen-lockfile
 
-    - name: Generate base bundle report
+    - name: Generate base branch bundle report
       run: |
         yarn analyze:ci
 

@@ -1,4 +1,4 @@
-import { markdown } from 'danger';
+import { markdown, warn } from 'danger';
 import report from './report.json';
 import baseReport from './base-report.json';
 
@@ -52,12 +52,12 @@ const compareSizeInBytes = (newSize: number, oldSize: number) => {
 	return translateSize(sizeDiff);
 };
 
-const compareSizeAsPercentage = (newSize: number, oldSize: number) => {
+const compareSizeAsPercent = (newSize: number, oldSize: number) => {
 	const prefix = newSize > oldSize ? '🔼 +' : '🔽 -';
 	const decimal = Math.abs((newSize - oldSize) / oldSize);
-	const percentage = (decimal * 100).toFixed(2);
+	const percent = (decimal * 100).toFixed(2);
 
-	return `${prefix}${percentage}%`;
+	return `${prefix}${percent}%`;
 };
 
 const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
@@ -107,7 +107,7 @@ const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 		if (isSizeDiffSignificant(newSize, oldSize)) {
 			const bundleName = newBundle.label;
 			const sizeDiff = compareSizeInBytes(newSize, oldSize);
-			const percentDiff = compareSizeAsPercentage(newSize, oldSize);
+			const percentDiff = compareSizeAsPercent(newSize, oldSize);
 			const oldSizeString = translateSize(oldSize);
 			const newSizeString = translateSize(newSize);
 
@@ -127,6 +127,10 @@ const createComparisonBundleTable = (
 		'Bundle | Size Diff (Gzip) | % Diff | Old Size | New Size\n--- | --- | --- | --- | ---\n';
 	const tableRows = createComparisonRows(newBundles, oldBundles);
 
+	if (!tableRows) {
+		return markdown('No significant bundle size changes in this PR ✅');
+	}
+
 	markdown(title);
 	markdown(`${tableHeader}${tableRows}`);
 };
@@ -141,6 +145,15 @@ const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 	const bundlesOnlyInOld = oldBundles.filter(
 		ob => !newBundles.some(nb => nb.label === ob.label)
 	);
+
+	const noBundlesToReport =
+		!newBundlesToCompare.length &&
+		!bundlesOnlyInNew.length &&
+		!bundlesOnlyInOld.length;
+
+	if (noBundlesToReport) {
+		return warn('No bundles to report on');
+	}
 
 	if (newBundlesToCompare.length) {
 		createComparisonBundleTable(newBundlesToCompare, oldBundles);
