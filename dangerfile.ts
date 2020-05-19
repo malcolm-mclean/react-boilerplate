@@ -53,17 +53,16 @@ const compareSizeInBytes = (newSize: number, oldSize: number) => {
 };
 
 const compareSizeAsPercentage = (newSize: number, oldSize: number) => {
-	if (newSize > oldSize) {
-		const percentage = ((oldSize / newSize) * 100).toFixed(2);
-		return `🔼 +${percentage}%`;
-	}
+	const prefix = newSize > oldSize ? '🔼 +' : '🔽 -';
+	const decimal = Math.abs((newSize - oldSize) / oldSize);
+	const percentage = (decimal * 100).toFixed(2);
 
-	if (newSize < oldSize) {
-		const percentage = ((newSize / oldSize) * 100).toFixed(2);
-		return `🔽 -${percentage}%`;
-	}
+	return `${prefix}${percentage}%`;
+};
 
-	return '-';
+const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
+	const sizeDiff = Math.abs(newSize - oldSize);
+	return sizeDiff > 20;
 };
 
 const createSimpleRows = (bundles: Bundle[]) => {
@@ -95,6 +94,7 @@ const createSimpleBundleTable = (bundles: Bundle[], isAddingBundles = true) => {
 
 const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 	let rows = '';
+
 	newBundles.forEach(newBundle => {
 		const matchingBundle = oldBundles.find(
 			ob => ob.label === newBundle.label
@@ -103,18 +103,18 @@ const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 		const newSize = newBundle.gzipSize;
 		const oldSize = matchingBundle.gzipSize;
 
-		if (newSize !== oldSize) {
+		if (isSizeDiffSignificant(newSize, oldSize)) {
 			const bundleName = newBundle.label;
 			const sizeDiff = compareSizeInBytes(newSize, oldSize);
 			const percentDiff = compareSizeAsPercentage(newSize, oldSize);
 			const oldSizeString = translateSize(oldSize);
 			const newSizeString = translateSize(newSize);
 
-			rows += `${bundleName} | ${sizeDiff} | ${percentDiff} | ${oldSizeString} | ${newSizeString}`;
+			rows += `${bundleName} | ${sizeDiff} | ${percentDiff} | ${oldSizeString} | ${newSizeString}\n`;
 		}
 	});
 
-	return rows;
+	return rows.trim();
 };
 
 const createComparisonBundleTable = (
@@ -123,7 +123,7 @@ const createComparisonBundleTable = (
 ) => {
 	const title = '### Bundles changed in this PR:';
 	const tableHeader =
-		'Bundle | Size Diff (Gzip) | % Diff | Old Size (Gzip) | New Size (Gzip)\n--- | --- | --- | --- | ---\n';
+		'Bundle | Size Diff (Gzip) | % Diff | Old Size | New Size\n--- | --- | --- | --- | ---\n';
 	const tableRows = createComparisonRows(newBundles, oldBundles);
 
 	markdown(title);
@@ -141,15 +141,15 @@ const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 		ob => !newBundles.some(nb => nb.label === ob.label)
 	);
 
-	if (newBundlesToCompare) {
+	if (newBundlesToCompare.length) {
 		createComparisonBundleTable(newBundlesToCompare, oldBundles);
 	}
 
-	if (bundlesOnlyInNew) {
+	if (bundlesOnlyInNew.length) {
 		createSimpleBundleTable(bundlesOnlyInNew);
 	}
 
-	if (bundlesOnlyInOld) {
+	if (bundlesOnlyInOld.length) {
 		createSimpleBundleTable(bundlesOnlyInOld, false);
 	}
 };
