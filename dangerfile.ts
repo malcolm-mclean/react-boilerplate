@@ -11,13 +11,17 @@ interface Bundle {
 }
 
 const translateSize = (size: number) => {
-	const kilobytes = (size / 1000).toFixed(2);
+	if (size < 1000) {
+		return `${size} B`;
+	}
 
-	if (parseFloat(kilobytes) > 1000) {
+	if (size > 1000000) {
 		const megabytes = (size / 1000000).toFixed(2);
 
 		return `${megabytes} MB`;
 	}
+
+	const kilobytes = (size / 1000).toFixed(2);
 
 	return `${kilobytes} KB`;
 };
