@@ -2,8 +2,22 @@ import { markdown } from 'danger';
 import report from './report.json';
 import baseReport from './base-report.json';
 
-const sizeToKilobyteString = (size: number) => {
-	const kilobytes = size / 1000;
+interface Bundle {
+	label: string;
+	statSize: number;
+	parsedSize: number;
+	gzipSize: number;
+	// group intentionally left out
+}
+
+const translateSize = (size: number) => {
+	const kilobytes = (size / 1000).toFixed(2);
+
+	if (parseFloat(kilobytes) > 1000) {
+		const megabytes = (size / 1000000).toFixed(2);
+
+		return `${megabytes} MB`;
+	}
 
 	return `${kilobytes} KB`;
 };
@@ -15,53 +29,129 @@ const cleanBundleLabel = (label: string) => {
 	return label.slice(nameStartIndex, nameEndIndex);
 };
 
-const createRowsMarkdown = () => {
-	let rowsMarkdown = '';
+const reportToBundles = (report: any[]): Bundle[] => {
+	if (!Array.isArray(report)) {
+		fail('Bundle report is in an unexpected format');
+	}
 
-	report.map(bundle => {
-		const bundleName = cleanBundleLabel(bundle.label);
-		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
-		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
-
-		rowsMarkdown += `${bundleName} | ${gzipSize} | ${parsedSize}\n`;
+	const bundles: Bundle[] = report.map(bundle => {
+		return {
+			label: cleanBundleLabel(bundle.label),
+			statSize: bundle.statSize,
+			parsedSize: bundle.parsedSize,
+			gzipSize: bundle.gzipSize,
+		};
 	});
 
-	return rowsMarkdown.trim();
+	return bundles;
 };
 
-const createTableMarkdown = () => {
-	const headerMarkdown =
-		'**Bundle** | **Gzip Size** | **Parsed Size**\n--- | --- | ---\n';
+const compareSizeInBytes = (newSize: number, oldSize: number) => {
+	const sizeDiff = newSize - oldSize;
 
-	const rows = createRowsMarkdown();
-
-	markdown(`${headerMarkdown}${rows}`);
+	return translateSize(sizeDiff);
 };
 
-const createBaseRowsMarkdown = () => {
-	let rowsMarkdown = '';
+const compareSizeAsPercentage = (newSize: number, oldSize: number) => {
+	if (newSize > oldSize) {
+		const percentage = ((oldSize / newSize) * 100).toFixed(2);
+		return `🔼 +${percentage}%`;
+	}
 
-	baseReport.map(bundle => {
-		const bundleName = cleanBundleLabel(bundle.label);
-		const gzipSize = sizeToKilobyteString(bundle.gzipSize);
-		const parsedSize = sizeToKilobyteString(bundle.parsedSize);
+	if (newSize < oldSize) {
+		const percentage = ((newSize / oldSize) * 100).toFixed(2);
+		return `🔽 -${percentage}%`;
+	}
 
-		rowsMarkdown += `${bundleName} | ${gzipSize} | ${parsedSize}\n`;
+	return '-';
+};
+
+const createSimpleRows = (bundles: Bundle[]) => {
+	let rows = '';
+
+	bundles.forEach(bundle => {
+		const bundleName = bundle.label;
+		const size = translateSize(bundle.statSize);
+		const minifiedSize = translateSize(bundle.parsedSize);
+		const gzipSize = translateSize(bundle.gzipSize);
+
+		rows += `${bundleName} | ${size} | ${minifiedSize} | ${gzipSize}\n`;
 	});
 
-	return rowsMarkdown.trim();
+	return rows.trim();
 };
 
-const createBaseTableMarkdown = () => {
-	const headerMarkdown =
-		'**Bundle** | **Gzip Size** | **Parsed Size**\n--- | --- | ---\n';
+const createSimpleBundleTable = (bundles: Bundle[], isAddingBundles = true) => {
+	const title = isAddingBundles
+		? '#### New bundles in this PR:'
+		: '#### Removed bundles in this PR:';
+	const tableHeader =
+		'Bundle | Size | Minified | Gzipped\n--- | --- | --- | ---\n';
+	const tableRows = createSimpleRows(bundles);
 
-	const rows = createBaseRowsMarkdown();
-
-	markdown(`${headerMarkdown}${rows}`);
+	markdown(title);
+	markdown(`${tableHeader}${tableRows}`);
 };
 
-markdown('### Bundles in base branch');
-createBaseTableMarkdown();
-markdown('### Bundles in compare branch');
-createTableMarkdown();
+const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
+	let rows = '';
+	newBundles.forEach(newBundle => {
+		const matchingBundle = oldBundles.find(
+			ob => ob.label === newBundle.label
+		);
+
+		const newSize = newBundle.gzipSize;
+		const oldSize = matchingBundle.gzipSize;
+
+		if (newSize !== oldSize) {
+			const bundleName = newBundle.label;
+			const sizeDiff = compareSizeInBytes(newSize, oldSize);
+			const percentDiff = compareSizeAsPercentage(newSize, oldSize);
+			const oldSizeString = translateSize(oldSize);
+			const newSizeString = translateSize(newSize);
+
+			rows += `${bundleName} | ${sizeDiff} | ${percentDiff} | ${oldSizeString} | ${newSizeString}`;
+		}
+	});
+
+	return rows;
+};
+
+const createComparisonBundleTable = (
+	newBundles: Bundle[],
+	oldBundles: Bundle[]
+) => {
+	const title = '### Bundles changed in this PR:';
+	const tableHeader =
+		'Bundle | Size Diff (Gzip) | % Diff | Old Size (Gzip) | New Size (Gzip)\n--- | --- | --- | --- | ---\n';
+	const tableRows = createComparisonRows(newBundles, oldBundles);
+
+	markdown(title);
+	markdown(`${tableHeader}${tableRows}`);
+};
+
+const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
+	const newBundlesToCompare = newBundles.filter(nb =>
+		oldBundles.some(ob => ob.label === nb.label)
+	);
+	const bundlesOnlyInNew = newBundles.filter(
+		nb => !oldBundles.some(ob => ob.label === nb.label)
+	);
+	const bundlesOnlyInOld = oldBundles.filter(
+		ob => !newBundles.some(nb => nb.label === ob.label)
+	);
+
+	if (newBundlesToCompare) {
+		createComparisonBundleTable(newBundlesToCompare, oldBundles);
+	}
+
+	if (bundlesOnlyInNew) {
+		createSimpleBundleTable(bundlesOnlyInNew);
+	}
+
+	if (bundlesOnlyInOld) {
+		createSimpleBundleTable(bundlesOnlyInOld, false);
+	}
+};
+
+interpretBundles(reportToBundles(report), reportToBundles(baseReport));
