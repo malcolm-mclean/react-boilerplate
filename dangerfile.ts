@@ -168,4 +168,7 @@ const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 	}
 };
 
-interpretBundles(reportToBundles(report), reportToBundles(baseReport));
+const newBundles = reportToBundles(report);
+const oldBundles = reportToBundles(baseReport);
+
+interpretBundles(newBundles, oldBundles);
