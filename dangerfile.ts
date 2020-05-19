@@ -62,6 +62,7 @@ const compareSizeAsPercentage = (newSize: number, oldSize: number) => {
 
 const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
 	const sizeDiff = Math.abs(newSize - oldSize);
+
 	return sizeDiff > 20;
 };
 
