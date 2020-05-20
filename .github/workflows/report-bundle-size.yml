@@ -12,7 +12,7 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      APP_DIR: ${{ github.workspace }}
+      JS_APP_DIR: ${{ github.workspace }}
       BASE_REPORT_DIR_NAME: ${{ github.base_ref }}-report
       BASE_REPORT_FILENAME: base-report.json
 
@@ -40,18 +40,18 @@ jobs:
         restore-keys: ${{ runner.os }}-yarn-
 
     - name: Install packages to base branch
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate base branch bundle report
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn analyze:ci
 
     - name: Preserve report for base branch
       run: |
-        cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${{ env.APP_DIR }}
+        cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${JS_APP_DIR}
         mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
 
     - name: Checkout compare branch
@@ -66,21 +66,21 @@ jobs:
         restore-keys: ${{ runner.os }}-yarn-
 
     - name: Install packages to compare branch
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate compare bundle report
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn analyze:ci
 
     - name: Recover report from base branch
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         mv ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME} .
 
     - name: Create PR comment
-      working-directory: ${{ env.APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn danger ci
