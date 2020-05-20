@@ -12,6 +12,8 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BASE_REPORT_DIR: ~/${{ github.base_ref }}-report
+      BASE_REPORT_FILENAME: base-report.json
 
     steps:
     - uses: actions/setup-node@v1
@@ -46,7 +48,7 @@ jobs:
 
     - name: Preserve report for base branch
       run: |
-        mv report.json ../base-report.json
+        mv report.json ${BASE_REPORT_DIR}/${BASE_REPORT_FILENAME}
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
@@ -69,7 +71,7 @@ jobs:
 
     - name: Recover report from base branch
       run: |
-        mv ../base-report.json base-report.json
+        mv ${BASE_REPORT_DIR}/${BASE_REPORT_FILENAME} .
 
     - name: Create PR comment
       run: |

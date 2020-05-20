@@ -57,7 +57,7 @@ const compareSizeInBytes = (newSize: number, oldSize: number) => {
 };
 
 const compareSizeAsPercent = (newSize: number, oldSize: number) => {
-	const prefix = newSize > oldSize ? '🔼 +' : '🔽 -';
+	const prefix = newSize > oldSize ? '+' : '-';
 	const decimal = Math.abs((newSize - oldSize) / oldSize);
 	const percent = (decimal * 100).toFixed(2);
 
@@ -100,16 +100,14 @@ const createSimpleBundleTable = (bundles: Bundle[], isAddingBundles = true) => {
 const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 	let rows = '';
 
-	newBundles.forEach(newBundle => {
-		const matchingBundle = oldBundles.find(
-			ob => ob.label === newBundle.label
-		);
+	newBundles.forEach(bundle => {
+		const matchingBundle = oldBundles.find(ob => ob.label === bundle.label);
 
-		const newSize = newBundle.gzipSize;
+		const newSize = bundle.gzipSize;
 		const oldSize = matchingBundle.gzipSize;
 
 		if (isSizeDiffSignificant(newSize, oldSize)) {
-			const bundleName = newBundle.label;
+			const bundleName = bundle.label;
 			const sizeDiff = compareSizeInBytes(newSize, oldSize);
 			const percentDiff = compareSizeAsPercent(newSize, oldSize);
 			const oldSizeString = translateSize(oldSize);
