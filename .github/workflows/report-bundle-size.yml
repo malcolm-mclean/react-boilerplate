@@ -18,12 +18,26 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: |
+        echo "::set-output name=dir::$(yarn cache dir)"
+
     - name: Checkout base branch
       uses: actions/checkout@v2
       with:
-        ref: master
+        ref: ${{ github.base_ref }}
 
-    - name: Install packages to base branch
+    - name: Cache base branch yarn.lock
+      uses: actions/cache@v1
+      id: yarn-cache-base
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-base-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-base-
+
+    - name: Optionally install packages to base branch
+      if: steps.yarn-cache-base.outputs.cache-hit != 'true'
       run: |
         yarn install --frozen-lockfile
 
@@ -38,7 +52,16 @@ jobs:
     - name: Checkout compare branch
       uses: actions/checkout@v2
 
-    - name: Install packages to compare branch
+    - name: Cache compare branch yarn.lock
+      uses: actions/cache@v1
+      id: yarn-cache-compare
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-compare-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-compare-
+
+    - name: Optionally install packages to compare branch
+      if: steps.yarn-cache-compare.outputs.cache-hit != 'true'
       run: |
         yarn install --frozen-lockfile
 
