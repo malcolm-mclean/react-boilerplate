@@ -48,6 +48,7 @@ jobs:
 
     - name: Preserve report for base branch
       run: |
+        mkdir ${BASE_REPORT_DIR}
         mv report.json ${BASE_REPORT_DIR}/${BASE_REPORT_FILENAME}
 
     - name: Checkout compare branch
