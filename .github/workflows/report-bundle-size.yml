@@ -10,39 +10,77 @@ jobs:
       matrix:
         node-version: [10.x]
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      JS_APP_DIR: ${{ github.workspace }}
+      BASE_REPORT_DIR_NAME: ${{ github.base_ref }}-report
+      BASE_REPORT_FILENAME: base-report.json
+
     steps:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: |
+        echo "::set-output name=dir::$(yarn cache dir)"
+
     - name: Checkout base branch
       uses: actions/checkout@v2
       with:
-        ref: master
+        ref: ${{ github.base_ref }}
+
+    - name: Cache base branch yarn.lock
+      uses: actions/cache@v1
+      id: yarn-cache-base
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-
 
     - name: Install packages to base branch
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn install --frozen-lockfile
 
-    - name: Generate base bundle report
+    - name: Generate base branch bundle report
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn analyze:ci
 
-    - name: Rename report to avoid overwriting
+    - name: Preserve report for base branch
       run: |
-        mv report.json base-report.json
+        cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${JS_APP_DIR}
+        mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
 
+    - name: Cache compare branch yarn.lock
+      uses: actions/cache@v1
+      id: yarn-cache-compare
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-
+
     - name: Install packages to compare branch
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate compare bundle report
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn analyze:ci
 
+    - name: Recover report from base branch
+      working-directory: ${{ env.JS_APP_DIR }}
+      run: |
+        mv ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME} .
+
     - name: Create PR comment
+      working-directory: ${{ env.JS_APP_DIR }}
       run: |
         yarn danger ci
