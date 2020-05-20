@@ -33,11 +33,10 @@ jobs:
       id: yarn-cache-base
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-base-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: ${{ runner.os }}-yarn-base-
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-
 
-    - name: Optionally install packages to base branch
-      if: steps.yarn-cache-base.outputs.cache-hit != 'true'
+    - name: Install packages to base branch
       run: |
         yarn install --frozen-lockfile
 
@@ -57,11 +56,10 @@ jobs:
       id: yarn-cache-compare
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-compare-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: ${{ runner.os }}-yarn-compare-
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-yarn-
 
-    - name: Optionally install packages to compare branch
-      if: steps.yarn-cache-compare.outputs.cache-hit != 'true'
+    - name: Install packages to compare branch
       run: |
         yarn install --frozen-lockfile
 
