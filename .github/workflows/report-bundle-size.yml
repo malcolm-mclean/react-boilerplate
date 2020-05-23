@@ -6,10 +6,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [10.x]
-
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       JS_APP_DIR: ${{ github.workspace }}
@@ -17,9 +13,9 @@ jobs:
       BASE_REPORT_FILENAME: base-report.json
 
     steps:
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v2-beta
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '12'
 
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
