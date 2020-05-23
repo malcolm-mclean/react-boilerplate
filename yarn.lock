@@ -1091,9 +1091,9 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@malcolm-mclean/eslint-config@malcolm-mclean/eslint-config#2.0.0":
-  version "2.0.0"
-  resolved "https://codeload.github.com/malcolm-mclean/eslint-config/tar.gz/26aba3048bb4563b4147ec5693518864fb1155b5"
+"@malcolm-mclean/eslint-config@malcolm-mclean/eslint-config#2.0.1":
+  version "2.0.1"
+  resolved "https://codeload.github.com/malcolm-mclean/eslint-config/tar.gz/0e09643651afaea297e1cbe2cd7b345acec05782"
   dependencies:
     "@typescript-eslint/eslint-plugin" "^3.0.0"
     "@typescript-eslint/parser" "^3.0.0"
