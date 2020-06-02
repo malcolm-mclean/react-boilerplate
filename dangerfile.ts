@@ -33,7 +33,7 @@ const cleanBundleLabel = (label: string) => {
 	return label.slice(nameStartIndex, nameEndIndex);
 };
 
-const reportToBundles = (report: any[]): Bundle[] => {
+const reportToBundles = (report: unknown[]): Bundle[] => {
 	if (!Array.isArray(report)) {
 		fail('Bundle report is in an unexpected format');
 	}
