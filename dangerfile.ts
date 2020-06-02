@@ -1,4 +1,4 @@
-import { markdown, warn } from 'danger';
+import { markdown, warn, fail } from 'danger';
 import report from './report.json';
 import baseReport from './base-report.json';
 
