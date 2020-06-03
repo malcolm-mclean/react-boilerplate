@@ -10,20 +10,53 @@ interface Bundle {
 	// group intentionally left out
 }
 
+const getSizeDiffPrefix = (newSize: number, oldSize: number) => {
+	return newSize >= oldSize ? '+' : '-';
+};
+
 const translateSize = (size: number) => {
-	if (size < 1000) {
-		return `${size} B`;
+	const prefix = getSizeDiffPrefix(size, 0);
+	const absoluteSize = Math.abs(size);
+
+	if (absoluteSize < 1000) {
+		return `${prefix}${absoluteSize} B`;
 	}
 
-	if (size > 1000000) {
-		const megabytes = (size / 1000000).toFixed(2);
+	if (absoluteSize > 1000000) {
+		const megabytes = (absoluteSize / 1000000).toFixed(2);
 
-		return `${megabytes} MB`;
+		return `${prefix}${megabytes} MB`;
 	}
 
-	const kilobytes = (size / 1000).toFixed(2);
+	const kilobytes = (absoluteSize / 1000).toFixed(2);
 
-	return `${kilobytes} KB`;
+	return `${prefix}${kilobytes} KB`;
+};
+
+const compareSizeInBytes = (newSize: number, oldSize: number) => {
+	const sizeDiff = newSize - oldSize;
+
+	return translateSize(sizeDiff);
+};
+
+const compareSizeAsPercent = (newSize: number, oldSize: number) => {
+	const prefix = getSizeDiffPrefix(newSize, oldSize);
+	const decimal = Math.abs((newSize - oldSize) / oldSize);
+	const percent = (decimal * 100).toFixed(2);
+
+	return `${prefix}${percent}%`;
+};
+
+const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
+	const sizeDiff = Math.abs(newSize - oldSize);
+
+	return sizeDiff > 20;
+};
+
+// https://github.com/danger/danger-js/issues/1014
+const createMessageString = (markdownArgs: string[]): string => {
+	const markdownString = markdownArgs.join('\n');
+	return markdownString.trim();
 };
 
 const cleanBundleLabel = (label: string) => {
@@ -50,32 +83,6 @@ const reportToBundles = (report: unknown[]): Bundle[] => {
 	return bundles;
 };
 
-const compareSizeInBytes = (newSize: number, oldSize: number) => {
-	const sizeDiff = newSize - oldSize;
-
-	return translateSize(sizeDiff);
-};
-
-const compareSizeAsPercent = (newSize: number, oldSize: number) => {
-	const prefix = newSize > oldSize ? '+' : '-';
-	const decimal = Math.abs((newSize - oldSize) / oldSize);
-	const percent = (decimal * 100).toFixed(2);
-
-	return `${prefix}${percent}%`;
-};
-
-const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
-	const sizeDiff = Math.abs(newSize - oldSize);
-
-	return sizeDiff > 20;
-};
-
-// https://github.com/danger/danger-js/issues/1014
-const createMessageString = (markdownArgs: string[]): string => {
-	const markdownString = markdownArgs.join('\n');
-	return markdownString.trim();
-};
-
 const createSimpleRows = (bundles: Bundle[]) => {
 	let rows = '';
 
@@ -93,8 +100,8 @@ const createSimpleRows = (bundles: Bundle[]) => {
 
 const createSimpleBundleTable = (bundles: Bundle[], isAddingBundles = true) => {
 	const title = isAddingBundles
-		? '#### New bundles in this PR:'
-		: '#### Removed bundles in this PR:';
+		? '### New bundles in this PR:'
+		: '### Removed bundles in this PR:';
 	const tableHeader =
 		'Bundle | Size | Minified | Gzipped\n--- | --- | --- | ---';
 	const tableRows = createSimpleRows(bundles);
