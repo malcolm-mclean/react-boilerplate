@@ -133,7 +133,7 @@ const createComparisonBundleTable = (
 	const tableHeader =
 		'Bundle | Size Diff | % Diff | Old Size | New Size\n--- | --- | --- | --- | ---';
 	const tableRows = createComparisonRows(newBundles, oldBundles);
-	const disclaimer = '_Size differences calculated using gzip bundle size_';
+	const disclaimer = '\n_Size differences calculated using gzip bundle size_';
 
 	if (!tableRows) {
 		return markdown('No significant bundle size changes in this PR ✅');
