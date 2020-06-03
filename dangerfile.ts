@@ -43,7 +43,7 @@ const reportToBundles = (report: unknown[]): Bundle[] => {
 			label: cleanBundleLabel(bundle.label),
 			statSize: bundle.statSize,
 			parsedSize: bundle.parsedSize,
-			gzipSize: bundle.gzipSize,
+			gzipSize: bundle.gzipSize
 		};
 	});
 
@@ -70,6 +70,12 @@ const isSizeDiffSignificant = (newSize: number, oldSize: number) => {
 	return sizeDiff > 20;
 };
 
+// https://github.com/danger/danger-js/issues/1014
+const createMessageString = (markdownArgs: string[]): string => {
+	const markdownString = markdownArgs.join('\n');
+	return markdownString.trim();
+};
+
 const createSimpleRows = (bundles: Bundle[]) => {
 	let rows = '';
 
@@ -90,11 +96,10 @@ const createSimpleBundleTable = (bundles: Bundle[], isAddingBundles = true) => {
 		? '#### New bundles in this PR:'
 		: '#### Removed bundles in this PR:';
 	const tableHeader =
-		'Bundle | Size | Minified | Gzipped\n--- | --- | --- | ---\n';
+		'Bundle | Size | Minified | Gzipped\n--- | --- | --- | ---';
 	const tableRows = createSimpleRows(bundles);
 
-	markdown(title);
-	markdown(`${tableHeader}${tableRows}`);
+	markdown(createMessageString([title, tableHeader, tableRows]));
 };
 
 const createComparisonRows = (newBundles: Bundle[], oldBundles: Bundle[]) => {
@@ -126,16 +131,15 @@ const createComparisonBundleTable = (
 ) => {
 	const title = '### Bundles changed in this PR:';
 	const tableHeader =
-		'Bundle | Size Diff | % Diff | Old Size | New Size\n--- | --- | --- | --- | ---\n';
+		'Bundle | Size Diff | % Diff | Old Size | New Size\n--- | --- | --- | --- | ---';
 	const tableRows = createComparisonRows(newBundles, oldBundles);
+	const disclaimer = '_Size differences calculated using gzip bundle size_';
 
 	if (!tableRows) {
 		return markdown('No significant bundle size changes in this PR ✅');
 	}
 
-	markdown(title);
-	markdown(`${tableHeader}${tableRows}`);
-	markdown('_Size differences calculated using gzip bundle size_');
+	markdown(createMessageString([title, tableHeader, tableRows, disclaimer]));
 };
 
 const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
