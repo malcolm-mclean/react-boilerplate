@@ -14,8 +14,8 @@ const getSizeDiffPrefix = (newSize: number, oldSize: number) => {
 	return newSize >= oldSize ? '+' : '-';
 };
 
-const translateSize = (size: number) => {
-	const prefix = getSizeDiffPrefix(size, 0);
+const translateSize = (size: number, includePrefix = false) => {
+	const prefix = includePrefix ? getSizeDiffPrefix(size, 0) : '';
 	const absoluteSize = Math.abs(size);
 
 	if (absoluteSize < 1000) {
@@ -36,7 +36,7 @@ const translateSize = (size: number) => {
 const compareSizeInBytes = (newSize: number, oldSize: number) => {
 	const sizeDiff = newSize - oldSize;
 
-	return translateSize(sizeDiff);
+	return translateSize(sizeDiff, true);
 };
 
 const compareSizeAsPercent = (newSize: number, oldSize: number) => {
