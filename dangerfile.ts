@@ -40,7 +40,9 @@ const compareSizeInBytes = (newSize: number, oldSize: number) => {
 
 const compareSizeAsPercent = (newSize: number, oldSize: number) => {
 	const prefix = getSizeDiffPrefix(newSize, oldSize);
-	const percent = ((newSize / oldSize) * 100).toFixed(2);
+	const lesserSize = newSize < oldSize ? newSize : oldSize;
+	const greaterSize = newSize >= oldSize ? newSize : oldSize;
+	const percent = ((lesserSize / greaterSize) * 100).toFixed(2);
 
 	return `${prefix}${percent}%`;
 };
