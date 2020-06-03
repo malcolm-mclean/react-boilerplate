@@ -10,12 +10,7 @@ interface Bundle {
 	// group intentionally left out
 }
 
-const getSizeDiffPrefix = (newSize: number, oldSize: number) => {
-	return newSize >= oldSize ? '+' : '-';
-};
-
-const translateSize = (size: number, includePrefix = false) => {
-	const prefix = includePrefix ? getSizeDiffPrefix(size, 0) : '';
+const translateSize = (size: number, prefix = '') => {
 	const absoluteSize = Math.abs(size);
 
 	if (absoluteSize < 1000) {
@@ -33,10 +28,14 @@ const translateSize = (size: number, includePrefix = false) => {
 	return `${prefix}${kilobytes} KB`;
 };
 
+const getSizeDiffPrefix = (newSize: number, oldSize: number) => {
+	return newSize >= oldSize ? '+' : '-';
+};
+
 const compareSizeInBytes = (newSize: number, oldSize: number) => {
 	const sizeDiff = newSize - oldSize;
 
-	return translateSize(sizeDiff, true);
+	return translateSize(sizeDiff, getSizeDiffPrefix(newSize, oldSize));
 };
 
 const compareSizeAsPercent = (newSize: number, oldSize: number) => {
