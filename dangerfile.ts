@@ -7,7 +7,6 @@ interface Bundle {
 	statSize: number;
 	parsedSize: number;
 	gzipSize: number;
-	// group intentionally left out
 }
 
 const translateSize = (size: number, prefix = '') => {
@@ -17,7 +16,7 @@ const translateSize = (size: number, prefix = '') => {
 		return `${prefix}${absoluteSize} B`;
 	}
 
-	if (absoluteSize > 1000000) {
+	if (absoluteSize >= 1000000) {
 		const megabytes = (absoluteSize / 1000000).toFixed(2);
 
 		return `${prefix}${megabytes} MB`;
@@ -149,19 +148,29 @@ const createComparisonBundleTable = (
 	markdown(createMessageString([title, tableHeader, tableRows, disclaimer]));
 };
 
-const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
-	const newBundlesToCompare = newBundles.filter(nb =>
-		oldBundles.some(ob => ob.label === nb.label)
-	);
-	const bundlesOnlyInNew = newBundles.filter(
-		nb => !oldBundles.some(ob => ob.label === nb.label)
-	);
-	const bundlesOnlyInOld = oldBundles.filter(
-		ob => !newBundles.some(nb => nb.label === ob.label)
+const getBundlesInCommon = (bundlesA: Bundle[], bundlesB: Bundle[]) => {
+	const bundlesToCompare = bundlesA.filter(a =>
+		bundlesB.some(b => b.label === a.label)
 	);
 
+	return bundlesToCompare;
+};
+
+const filterBundles = (filterKeep: Bundle[], filterOut: Bundle[]) => {
+	const filteredBundles = filterKeep.filter(
+		k => !filterOut.some(o => o.label === k.label)
+	);
+
+	return filteredBundles;
+};
+
+const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
+	const bundlesToCompare = getBundlesInCommon(newBundles, oldBundles);
+	const bundlesOnlyInNew = filterBundles(newBundles, oldBundles);
+	const bundlesOnlyInOld = filterBundles(oldBundles, newBundles);
+
 	const noBundlesToReport =
-		!newBundlesToCompare.length &&
+		!bundlesToCompare.length &&
 		!bundlesOnlyInNew.length &&
 		!bundlesOnlyInOld.length;
 
@@ -169,8 +178,8 @@ const interpretBundles = (newBundles: Bundle[], oldBundles: Bundle[]) => {
 		return warn('No bundles to report on');
 	}
 
-	if (newBundlesToCompare.length) {
-		createComparisonBundleTable(newBundlesToCompare, oldBundles);
+	if (bundlesToCompare.length) {
+		createComparisonBundleTable(bundlesToCompare, oldBundles);
 	}
 
 	if (bundlesOnlyInNew.length) {
