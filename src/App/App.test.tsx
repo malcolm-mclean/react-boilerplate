@@ -6,6 +6,6 @@ describe('App', () => {
 	it('should render something', () => {
 		const { getByTestId } = render(<App />);
 
-		expect(getByTestId('app')).toBeTruthy();
+		expect(getByTestId('app')).toBeInTheDocument();
 	});
 });
