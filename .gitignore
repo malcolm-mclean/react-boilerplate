@@ -1,7 +1,6 @@
 node_modules/
 dist/
 coverage/
-coverage-final.json
 yarn-error.log
 report.html
 report.json
