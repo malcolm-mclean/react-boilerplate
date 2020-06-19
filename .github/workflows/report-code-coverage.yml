@@ -1,14 +1,13 @@
-name: Test
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+name: Report Code Coverage
+on: pull_request
 
 jobs:
-  test:
+  report-code-coverage:
 
     runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - uses: actions/setup-node@v2-beta
@@ -34,6 +33,10 @@ jobs:
       run: |
         yarn install --frozen-lockfile
 
-    - name: Test
+    - name: Generate coverage report
       run: |
-        yarn test
+        yarn test:ci
+
+    - name: Create PR comment
+      run: |
+        yarn danger ci --dangerfile ./scripts/report-code-coverage.ts

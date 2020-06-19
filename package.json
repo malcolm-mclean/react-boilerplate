@@ -16,7 +16,8 @@
 		"lint:ts": "eslint --ext .ts,.tsx src/",
 		"lint:scss": "stylelint \"src/**/*.scss\"",
 		"start": "webpack-dev-server --config webpack.dev.config.js",
-		"test": "yarn run lint && jest"
+		"test": "yarn run lint && jest",
+		"test:ci": "jest --coverage"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.9.6",
@@ -38,6 +39,7 @@
 		"cross-env": "^7.0.2",
 		"css-loader": "^3.5.3",
 		"danger": "^10.2.0",
+		"danger-plugin-code-coverage": "^1.1.5",
 		"file-loader": "^6.0.0",
 		"html-webpack-plugin": "^4.3.0",
 		"jest": "^26.0.1",

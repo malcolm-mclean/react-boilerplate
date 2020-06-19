@@ -1,6 +1,6 @@
 import { markdown, warn, fail } from 'danger';
-import report from './report.json';
-import baseReport from './base-report.json';
+import report from '../report.json';
+import baseReport from '../base-report.json';
 
 interface Bundle {
 	label: string;
