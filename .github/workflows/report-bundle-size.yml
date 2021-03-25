@@ -50,7 +50,7 @@ jobs:
         cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${JS_APP_DIR}
         mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
 
-    - name: The Job ID
+    - name: The Job ID (while master is checked out)
       run: |
         echo "The run id: ${{ github.run_id }}"
         echo "The sha: ${{ github.sha }}"
@@ -64,6 +64,11 @@ jobs:
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
+
+    - name: The Job ID (while new branch is checked out)
+      run: |
+        echo "The run id: ${{ github.run_id }}"
+        echo "The sha: ${{ github.sha }}"
 
     - name: Cache compare branch yarn.lock
       uses: actions/cache@v2
