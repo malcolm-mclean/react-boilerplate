@@ -1,11 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import { render, screen } from '@testing-library/react';
+import { App } from './App';
 
-describe('App', () => {
-	it('should render something', () => {
-		const { getByTestId } = render(<App />);
+it('should render something', () => {
+	render(<App />);
 
-		expect(getByTestId('app')).toBeTruthy();
-	});
+	expect(screen.getByTestId('app')).toBeTruthy();
 });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 'use strict';
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
@@ -9,21 +10,21 @@ const PUBLIC_PATH = '/';
 
 module.exports = {
 	entry: {
-		main: SRC_DIR + '/index.tsx',
+		main: SRC_DIR + '/index.tsx'
 	},
 	output: {
 		path: DIST_DIR,
-		filename: 'static/js/[name].[hash].js',
-		chunkFilename: 'static/js/[name].[hash].js',
-		publicPath: PUBLIC_PATH,
+		filename: 'static/js/[name].[chunkhash].js',
+		chunkFilename: 'static/js/[name].[chunkhash].js',
+		publicPath: PUBLIC_PATH
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js', '.json', '.svg'],
 		alias: {
-			fonts: path.resolve(__dirname, SRC_DIR, 'assets/fonts'),
-			images: path.resolve(__dirname, SRC_DIR, 'assets/images'),
-			styles: path.resolve(__dirname, SRC_DIR, 'assets/styles'),
-		},
+			fonts: path.resolve(__dirname, SRC_DIR, 'fonts'),
+			images: path.resolve(__dirname, SRC_DIR, 'images'),
+			styles: path.resolve(__dirname, SRC_DIR, 'styles')
+		}
 	},
 	module: {
 		rules: [
@@ -33,19 +34,24 @@ module.exports = {
 				exclude: /node_modules/,
 				use: [
 					{
-						loader: 'babel-loader',
-					},
-				],
+						loader: 'babel-loader'
+					}
+				]
 			},
 			{
 				test: /\.scss$/,
 				use: [
 					{ loader: 'style-loader' },
-					{ loader: miniCssExtractPlugin.loader },
+					{
+						loader: miniCssExtractPlugin.loader,
+						options: {
+							esModule: false
+						}
+					},
 					{ loader: 'css-loader' },
 					{ loader: 'postcss-loader' },
-					{ loader: 'sass-loader' },
-				],
+					{ loader: 'sass-loader' }
+				]
 			},
 			{
 				test: /\.(woff(2?)|ttf|eot|otf)(\?v=\d+\.\d+\.\d+)?$/i,
@@ -53,11 +59,11 @@ module.exports = {
 					{
 						loader: 'file-loader',
 						options: {
-							name: 'static/fonts/[name].[hash].[ext]',
-							publicPath: PUBLIC_PATH,
-						},
-					},
-				],
+							name: 'static/fonts/[name].[chunkhash].[ext]',
+							publicPath: PUBLIC_PATH
+						}
+					}
+				]
 			},
 			{
 				test: /\.(jpe?g|png|gif|svg)$/i,
@@ -65,13 +71,13 @@ module.exports = {
 					{
 						loader: 'file-loader',
 						options: {
-							name: 'static/img/[name].[hash].[ext]',
-							publicPath: PUBLIC_PATH,
-						},
-					},
-				],
-			},
-		],
+							name: 'static/img/[name].[chunkhash].[ext]',
+							publicPath: PUBLIC_PATH
+						}
+					}
+				]
+			}
+		]
 	},
 	optimization: {
 		splitChunks: {
@@ -80,18 +86,18 @@ module.exports = {
 				vendor: {
 					test: /[\\/]node_modules[\\/]/,
 					name: 'vendor',
-					chunks: 'all',
-				},
-			},
-		},
+					chunks: 'all'
+				}
+			}
+		}
 	},
 	plugins: [
 		new htmlWebpackPlugin({
 			inject: true,
-			template: 'src/index.html',
+			template: 'src/index.html'
 		}),
 		new miniCssExtractPlugin({
-			filename: 'static/css/[name].[hash].css',
-		}),
-	],
+			filename: 'static/css/[name].[chunkhash].css'
+		})
+	]
 };

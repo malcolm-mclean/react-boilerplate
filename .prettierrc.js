@@ -6,5 +6,6 @@ module.exports = {
 	arrowParens: 'avoid',
 	trailingComma: 'none',
 	printWidth: 80,
-	jsxSingleQuote: false
+	jsxSingleQuote: false,
+	endOfLine: 'lf'
 };
