@@ -49,8 +49,7 @@ jobs:
       id: preserve-report
       run: |
         mkdir ${{ env.BASE_REPORT_PRESERVE_DIRECTORY }}
-        echo "PRESERVED_BASE_REPORT=${{ env.BASE_REPORT_PRESERVE_DIRECTORY }}/${{ env.BASE_REPORT_FILENAME }}" >> $GITHUB_ENV
-        mv report.json ${{ env.PRESERVED_BASE_REPORT }}
+        mv report.json ${{ env.BASE_REPORT_PRESERVE_DIRECTORY }}/${{ env.BASE_REPORT_FILENAME }}
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
@@ -76,7 +75,7 @@ jobs:
     - name: Recover report from base branch
       working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
-        mv ${{ env.PRESERVED_BASE_REPORT }} .
+        mv ${{ env.BASE_REPORT_PRESERVE_DIRECTORY }}/${{ env.BASE_REPORT_FILENAME }} .
 
     - name: Create PR comment
       working-directory: ${{ env.JS_APP_DIRECTORY }}
