@@ -51,7 +51,6 @@ jobs:
         mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
 
     - name: Upload report for base branch
-      working-directory: ${{ env.JS_APP_DIR }}
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.BASE_REPORT_DIR_NAME }}.json
