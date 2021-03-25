@@ -24,7 +24,7 @@
 		"@babel/preset-env": "^7.11.5",
 		"@babel/preset-react": "^7.10.4",
 		"@babel/preset-typescript": "^7.10.4",
-		"@malcolm-mclean/eslint-config": "malcolm-mclean/eslint-config#3.0.0",
+		"@malcolm-mclean/eslint-config": "malcolm-mclean/eslint-config#4.0.2",
 		"@malcolm-mclean/stylelint-config": "malcolm-mclean/stylelint-config#1.1.0",
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.0.2",
