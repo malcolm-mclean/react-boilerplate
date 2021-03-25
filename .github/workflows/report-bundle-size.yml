@@ -54,7 +54,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.BASE_REPORT_DIR_NAME }}.json
-        path: ./report.json
+        path: ~/${{ env.BASE_REPORT_DIR_NAME }}/${{ env.BASE_REPORT_FILENAME }}
         retention-days: 1
 
     - name: Checkout compare branch
