@@ -50,6 +50,11 @@ jobs:
         cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${JS_APP_DIR}
         mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
 
+    - name: The Job ID
+      run: |
+        echo "The run id: ${{ github.run_id }}"
+        echo "The sha: ${{ github.sha }}"
+
     - name: Upload report for base branch
       uses: actions/upload-artifact@v2
       with:
