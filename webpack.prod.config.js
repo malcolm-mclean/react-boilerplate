@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+'use strict';
 const { merge } = require('webpack-merge');
 const path = require('path');
 const baseConfig = require('./webpack.base.config');
@@ -9,9 +11,9 @@ const PUBLIC_PATH = '/';
 module.exports = merge(baseConfig, {
 	output: {
 		path: DIST_DIR,
-		filename: 'static/js/[name].[hash].js',
-		chunkFilename: 'static/js/[name].[hash].js',
-		publicPath: PUBLIC_PATH,
+		filename: 'static/js/[name].[chunkhash].js',
+		chunkFilename: 'static/js/[name].[chunkhash].js',
+		publicPath: PUBLIC_PATH
 	},
 	mode: 'production',
 	devtool: 'hidden-source-map',
@@ -22,10 +24,10 @@ module.exports = merge(baseConfig, {
 				vendor: {
 					test: /[\\/]node_modules[\\/]/,
 					name: 'vendor',
-					chunks: 'all',
-				},
-			},
+					chunks: 'all'
+				}
+			}
 		},
-		minimizer: [new terserPlugin()],
-	},
+		minimizer: [new terserPlugin()]
+	}
 });
