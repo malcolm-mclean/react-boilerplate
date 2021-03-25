@@ -12,9 +12,7 @@
 		"build": "yarn run clean && yarn run lint && webpack --config webpack.prod.config.js",
 		"build:stats": "yarn run clean && webpack --config webpack.prod.config.js --json > stats.json",
 		"clean": "rimraf dist/",
-		"lint": "yarn run lint:ts && yarn run lint:scss",
-		"lint:ts": "eslint --ext .ts,.tsx src/",
-		"lint:scss": "stylelint \"src/**/*.scss\"",
+		"lint": "eslint --ext .ts,.tsx src/",
 		"start": "webpack serve --config webpack.dev.config.js",
 		"test": "yarn run lint && jest"
 	},
@@ -25,7 +23,6 @@
 		"@babel/preset-react": "^7.12.13",
 		"@babel/preset-typescript": "^7.13.0",
 		"@malcolm-mclean/eslint-config": "malcolm-mclean/eslint-config#4.0.2",
-		"@malcolm-mclean/stylelint-config": "malcolm-mclean/stylelint-config#1.1.0",
 		"@testing-library/jest-dom": "^5.11.9",
 		"@testing-library/react": "^11.2.5",
 		"@types/jest": "^26.0.21",
