@@ -8,9 +8,10 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      JS_APP_DIR: ${{ github.workspace }}
-      BASE_REPORT_PRESERVE_DIR: ~/${{ github.base_ref }}-report
+      JS_APP_DIRECTORY: ${{ github.workspace }}
+      BASE_REPORT_PRESERVE_DESTINATION: ~/${{ github.sha }}-report
       BASE_REPORT_FILENAME: base-report.json
+      FULLY_QUALIFIED_PRESERVED_BASE_REPORT: ${{ env.BASE_REPORT_PRESERVE_DESTINATION }}/${{ env.BASE_REPORT_FILENAME }}
 
     steps:
     - uses: actions/setup-node@v2
@@ -36,19 +37,19 @@ jobs:
         restore-keys: ${{ runner.os }}-yarn-
 
     - name: Install packages to base branch
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate base branch bundle report
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
         yarn analyze:ci
 
     - name: Preserve report for base branch
       run: |
-        mkdir ${{ env.BASE_REPORT_PRESERVE_DIR }}
-        mv report.json ${{ env.BASE_REPORT_PRESERVE_DIR }}/${{ env.BASE_REPORT_FILENAME }}
+        mkdir ${{ env.BASE_REPORT_PRESERVE_DESTINATION }}
+        mv report.json ${{ FULLY_QUALIFIED_PRESERVED_BASE_REPORT }}
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
@@ -62,21 +63,21 @@ jobs:
         restore-keys: ${{ runner.os }}-yarn-
 
     - name: Install packages to compare branch
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
         yarn install --frozen-lockfile
 
     - name: Generate compare bundle report
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
         yarn analyze:ci
 
     - name: Recover report from base branch
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
-        mv ${{ env.BASE_REPORT_PRESERVE_DIR }}/${{ env.BASE_REPORT_FILENAME }} .
+        mv ${{ FULLY_QUALIFIED_PRESERVED_BASE_REPORT }} .
 
     - name: Create PR comment
-      working-directory: ${{ env.JS_APP_DIR }}
+      working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
         yarn danger ci --dangerfile ./scripts/report-bundle-size.ts
