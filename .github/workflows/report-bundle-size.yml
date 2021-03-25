@@ -52,9 +52,10 @@ jobs:
 
     - name: Upload report for base branch
       uses: actions/upload-artifact@v2
+      working-directory: ${{ env.JS_APP_DIR }}
       with:
         name: ${{ env.BASE_REPORT_DIR_NAME }}.json
-        path: report.json
+        path: ./report.json
         retention-days: 1
 
     - name: Checkout compare branch
