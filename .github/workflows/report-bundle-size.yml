@@ -9,7 +9,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       JS_APP_DIR: ${{ github.workspace }}
-      BASE_REPORT_DIR_NAME: ${{ github.base_ref }}-report
+      BASE_REPORT_PRESERVE_DIR: ~/${{ github.base_ref }}-report
       BASE_REPORT_FILENAME: base-report.json
 
     steps:
@@ -47,28 +47,11 @@ jobs:
 
     - name: Preserve report for base branch
       run: |
-        cd ~/ && mkdir ${BASE_REPORT_DIR_NAME} && cd ${JS_APP_DIR}
-        mv report.json ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME}
-
-    - name: The Job ID (while master is checked out)
-      run: |
-        echo "The run id: ${{ github.run_id }}"
-        echo "The sha: ${{ github.sha }}"
-
-    - name: Upload report for base branch
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ env.BASE_REPORT_DIR_NAME }}.json
-        path: ~/${{ env.BASE_REPORT_DIR_NAME }}/${{ env.BASE_REPORT_FILENAME }}
-        retention-days: 1
+        mkdir ${{ env.BASE_REPORT_PRESERVE_DIR }}
+        mv report.json ${{ env.BASE_REPORT_PRESERVE_DIR }}/${{ env.BASE_REPORT_FILENAME }}
 
     - name: Checkout compare branch
       uses: actions/checkout@v2
-
-    - name: The Job ID (while new branch is checked out)
-      run: |
-        echo "The run id: ${{ github.run_id }}"
-        echo "The sha: ${{ github.sha }}"
 
     - name: Cache compare branch yarn.lock
       uses: actions/cache@v2
@@ -91,7 +74,7 @@ jobs:
     - name: Recover report from base branch
       working-directory: ${{ env.JS_APP_DIR }}
       run: |
-        mv ~/${BASE_REPORT_DIR_NAME}/${BASE_REPORT_FILENAME} .
+        mv ${{ env.BASE_REPORT_PRESERVE_DIR }}/${{ env.BASE_REPORT_FILENAME }} .
 
     - name: Create PR comment
       working-directory: ${{ env.JS_APP_DIR }}
