@@ -9,6 +9,14 @@ interface Bundle {
 	gzipSize: number;
 }
 
+/**
+ * wishlist:
+ * full bundle report (including CSS)
+ * opinionated warnings above size threshold
+ * tests for each function
+ * image??? of dependency chart
+ */
+
 const translateSize = (size: number, prefix = '') => {
 	const absoluteSize = Math.abs(size);
 
