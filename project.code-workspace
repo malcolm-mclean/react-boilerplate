@@ -18,7 +18,8 @@
 			{
 				"language": "typescriptreact"
 			}
-		]
+		],
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"extensions": {
 		"recommendations": [
