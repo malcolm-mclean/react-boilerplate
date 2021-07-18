@@ -18,13 +18,13 @@
 			{
 				"language": "typescriptreact"
 			}
-		]
+		],
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"extensions": {
 		"recommendations": [
 			"editorconfig.editorconfig",
 			"esbenp.prettier-vscode",
-			"stylelint.vscode-stylelint",
 			"dbaeumer.vscode-eslint",
 			"wix.vscode-import-cost"
 		]
