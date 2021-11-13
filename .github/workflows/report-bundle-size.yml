@@ -80,4 +80,4 @@ jobs:
     - name: Create PR comment
       working-directory: ${{ env.JS_APP_DIRECTORY }}
       run: |
-        yarn danger ci --dangerfile ./scripts/report-bundle-size.ts
+        yarn danger ci --dangerfile ./scripts/report-bundle-size.ts --newComment --removePreviousComments

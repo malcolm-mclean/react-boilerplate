@@ -2,7 +2,7 @@ import { codeCoverage, PluginOptions } from 'danger-plugin-code-coverage';
 
 const defaultPluginOptions: PluginOptions[] = [
 	{
-		title: 'Code Coverage in this PR',
+		title: 'Test coverage in this PR',
 		ignoreCoveragePattern: [
 			'.js',
 			'.yml',

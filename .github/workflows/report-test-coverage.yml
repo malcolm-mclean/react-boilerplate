@@ -39,4 +39,4 @@ jobs:
 
     - name: Create PR comment
       run: |
-        yarn danger ci --dangerfile ./scripts/report-test-coverage.ts
+        yarn danger ci --dangerfile ./scripts/report-test-coverage.ts --newComment --removePreviousComments
