@@ -4,5 +4,5 @@ module.exports = {
 	testPathIgnorePatterns: ['/node_modules/'],
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
 	reporters: ['default'],
-	clearMocks: true,
+	clearMocks: true
 };
